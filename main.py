@@ -19,14 +19,16 @@ class Sender(Thread):
     while True:
       data = None
       if self.inputq.empty() is False:
-        data = self.inputq.get(timeout=1)
+        data = self.inputq.get_nowait()
         print(data)
-        if data[self.message.chat.id] == "stop": break
+        if data[self.message.chat.id] == "stop":
+          self.terminate()
+          return
       time.sleep(self.val)
       self.delayed_send(self.message.chat.id)
   
   def delayed_send(self, id):
-    bot.send_message(id, '<3') 
+    bot.send_message(id, '<3 \U0001F916') 
   
   def id(self): 
     return message.chat.id   
@@ -44,7 +46,7 @@ bot = telebot.TeleBot('918854063:AAE8-0Pr5KS_g31hevSpbT-ouF-AJvt0De8')#TOKEN)
 def reg_text(message):
   bot.send_message(message.chat.id, 'You have to wait..')
   
-  Sender(10, message, q).start()
+  Sender(2, message, q).start()
 
 @bot.message_handler(commands=['stop'])
 def stop_notifications_for(message):
